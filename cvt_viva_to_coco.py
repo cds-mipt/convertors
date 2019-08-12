@@ -2,7 +2,7 @@ import glob
 import pandas as pd
 import json
 import numpy as np
-
+import argparse
 
 PRE_DEFINED_CATEGORIES = {'traffic_light':1}#Here we put our categ
 
@@ -54,8 +54,23 @@ def get_annot_into_json(dataset_path, output_file):
     json_fp.write(json_str)
     json_fp.close()
 
+def build_parser():
+    parser = argparse.ArgumentParser("convert whole Viva dataset to coco .json format")
+    parser.add_argument("--dataset_dir",
+                        type=str,
+                        help='viva dataset folder')
+    parser.add_argument("--output",
+                        type=str,
+                        help="json output file name")
+    return parser
+
 if __name__ == '__main__':
     #im , annot = get_images_and_annot("/home/serg_t/Documents/datasets/dayTrain")
     #print(im[0:10], "\n", annot[0:10])
     #print(len(annot))
-    get_annot_into_json("/home/serg_t/Documents/datasets/dayVal", "/home/serg_t/Documents/mmdetection/data/viva/annotations/val_annotations.json")
+    #get_annot_into_json("/home/serg_t/Documents/datasets/dayVal", "/home/serg_t/Documents/mmdetection/data/viva/annotations/val_annotations.json")
+    parser = build_parser()
+    args = parser.parse_args()
+    det_dir = args.dataset_dir
+    output = args.output
+    get_annot_into_json(det_dir, output)

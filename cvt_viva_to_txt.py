@@ -1,5 +1,16 @@
 import pandas as pd
 import glob
+import argparse
+
+def build_parser():
+    parser = argparse.ArgumentParser("Convert viva to txt(Object Detection Metrics)")
+    parser.add_argument("--in_path",
+                        type=str,
+                        help="Path to viva .xml file")
+    parser.add_argument("--out_dir",
+                        type=str,
+                        help="Output dir for .txt files")
+    return parser
 
 def cvt_csv_to_txt(ann_file, out_path):
     t = pd.read_csv(ann_file, delimiter=";")
@@ -26,10 +37,12 @@ def cvt_csv_to_txt(ann_file, out_path):
 
 if __name__ == '__main__':
     #convert dayTrain
-    dest_folder = "/home/serg_t/Documents/datasets/test_train/txt/"
-    list_of_annot = glob.glob("/home/serg_t/Documents/datasets/test_train/*/*BOX.csv", recursive=True)
-    list_of_annot = sorted(list_of_annot)
-    for ann in list_of_annot:
-        cvt_csv_to_txt(ann, dest_folder)
-
-    print(list_of_annot)
+    parser = build_parser()
+    args = parser.parse_args()
+    dest_folder = args.out_dir#"/home/serg_t/Documents/datasets/test_train/txt/"
+    #list_of_annot = glob.glob("/home/serg_t/Documents/datasets/test_train/*/*BOX.csv", recursive=True)
+    #list_of_annot = sorted(list_of_annot)
+    #for ann in list_of_annot:
+    #    cvt_csv_to_txt(ann, dest_folder)
+    ann = args.in_path
+    cvt_csv_to_txt(ann, dest_folder)

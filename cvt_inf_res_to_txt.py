@@ -4,10 +4,9 @@ import glob
 import time
 import numpy as np
 from tqdm import tqdm
+import argparse
 
-test_im = "/home/serg_t/Documents/datasets/dayTrain/dayClip1/frames/dayClip1--00000.png"
-checkpoint_file = '/home/serg_t/Documents/mmdetection/cascade_rcnn_2/epoch_12.pth'
-config_file = '/home/serg_t/Documents/mmdetection/configs/cascade_rcnn_r50_fpn_1x_viva.py'
+#test_im = #"/home/serg_t/Documents/datasets/dayTrain/dayClip1/frames/dayClip1--00000.png"
 
 def cvt_inf_res_to_txt(img_name, output_dest=None, model=None, bb_cnt=0):
     result = inference_detector(model, img_name)
@@ -41,13 +40,36 @@ def cvt_inf_res_to_txt(img_name, output_dest=None, model=None, bb_cnt=0):
 
             file.writelines(info)
 
+def build_parser():
+    parser = argparse.ArgumentParser('Get inferense results in txt format')
+    parser.add_argument("--img_dir",
+                        type=str,
+                        help='Directory with images')
+    parser.add_argument("--dest_dir",
+                        type=str,
+                        help='Dir for output txt files')
+    parser.add_argument('--im_format',
+                        type=str,
+                        help='images format')
+    parser.add_argument('--checkpoint_file',
+                        type=str,
+                        help='.pth file with weights')
+    parser.add_argument('--config_file',
+                        type=str,
+                        help='.py config file for model')
+    return parser
+
+
 if __name__ == '__main__':
-    #dayTrain
-    bb_cnt = 0
+    parser = build_parser()
+    args = parser.parse_args()
+    checkpoint_file =  args.checkpoint_file# '/home/serg_t/Documents/mmdetection/cascade_rcnn_2/epoch_12.pth'
+    config_file = args.config_file# '/home/serg_t/Documents/mmdetection/configs/cascade_rcnn_r50_fpn_1x_viva.py'
+
     model = init_detector(config_file, checkpoint_file, device='cuda:0')
-    dest_folder = "/home/serg_t/Documents/datasets/dayVal/converted_inf_res/"
-    imgs_list  = glob.glob("/home/serg_t/Documents/datasets/dayVal/*/*/*.png", recursive=True)
-    #print(imgs_list[0])
-    #cvt_inf_res_to_txt(test_im, dest_folder)
+    dest_folder = args.dest_dir#"/home/serg_t/Documents/datasets/dayVal/converted_inf_res/"
+    img_folder = args.img_dir
+    im_format = args.im_format
+    imgs_list  = glob.glob(img_folder + "*." + im_format, recursive=True)
     for im in tqdm(imgs_list):
         cvt_inf_res_to_txt(im, dest_folder, model=model)
