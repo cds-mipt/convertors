@@ -4,7 +4,7 @@ import json
 
 from tqdm import tqdm
 
-from .utils import load_annot_as_df
+from utils import load_annot_as_df
 
 
 def build_parser():
@@ -17,7 +17,7 @@ def build_parser():
 # можно переопределить так как нужно
 # остальное вряд ли есть смысл менять
 def get_category_name(cls, temporary, data):
-    if cls in ["1.22", "1.23", "2.4", "2.5", "3.1", "3.2", "3.4", "3.24", "4.6", "4.7"]:
+    if cls in ["1.22", "1.23", "2.4", "2.5", "3.1", "3.2", "3.4", "3.24"]:
         return cls
     elif cls in ["3.25", "3.31"]:
         return "3.25+3.31"
